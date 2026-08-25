@@ -1,5 +1,5 @@
 api:
-  type: chat
+  type: completion
   streaming: true
   headers: null
   slo_unit: null
@@ -11,21 +11,17 @@ data:
   type: synthetic
   input_distribution: { type: uniform, min: 100, max: 500, mean: 250 }
   output_distribution: { type: uniform, min: 50, max: 200, mean: 100 }
-  multimodal:
-    image:
-      # 1–3 images per request, typically 2.
-      count: { type: uniform, min: 1, max: 3, mean: 2 }
-      # Place images at the start of the prompt (0.0). Use 1.0 for suffix
-      # placement, or a Distribution to vary placement per request.
-      insertion_point: 0.0
-      # Mix 1080p (most requests) with occasional 4K.
-      resolutions:
-        - resolution: "1080p"
-          weight: 0.8
-        - resolution: "4k"
-          weight: 0.2
-
+  path: null
+  corpus_file_path: null
+  shared_prefix: null
+  multimodal: null
+  trace: null
+  otel_trace_replay: null
+  weka_trace_replay: null
+  conversation_replay: null
+  visionarena: null
 load:
+  num_workers: 2
   type: constant
   interval: 1.0
   stages:
@@ -69,18 +65,26 @@ report:
     - 95.0
     - 99.0
     - 99.9
+  prometheus:
+    summary: true
+    per_stage: false
+  session_lifecycle:
+    summary: true
+    per_stage: true
+    per_session: false
+  goodput: null
 storage:
   local_storage:
-    path: reports_ai_studio
-    report_file_prefix: ai_studio_gemini_2.5_flash_image_multimodal_
+    path: reports_geap
+    report_file_prefix: geap_gemini_3.6_flash_
   google_cloud_storage: null
   simple_storage_service: null
 server:
   type: vllm
-  model_name: gemini-2.5-flash-image
-  base_url: http://127.0.0.1:8000/aistudio
+  model_name: google/gemini-3.6-flash
+  base_url: http://127.0.0.1:8000/geap
   ignore_eos: false
-  api_key: "$API_KEY"
+  api_key: null
   cert_path: null
   key_path: null
 tokenizer:

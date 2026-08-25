@@ -26,24 +26,25 @@ data:
           weight: 0.2
 
 load:
+  num_workers: 1
   type: constant
   interval: 1.0
   stages:
-  - rate: 5.0
-    duration: 20
+  - rate: 1.0
+    duration: 20          # Stage 0: 20 requests
     num_requests: null
     concurrency_level: null
-  - rate: 15.0
-    duration: 45
+  - rate: 2.0
+    duration: 20          # Stage 1: 40 requests
     num_requests: null
     concurrency_level: null
-  - rate: 25.0
-    duration: 89          # Updated from 45 to 89 to hit 3,000 total requests
+  - rate: 3.0
+    duration: 15          # Stage 2: 45 requests (Total: 105 requests)
     num_requests: null
     concurrency_level: null
   sweep: null
-  worker_max_concurrency: 100
-  worker_max_tcp_connections: 2500
+  worker_max_concurrency: 5
+  worker_max_tcp_connections: 50
   trace: null
   circuit_breakers: []
   request_timeout: null
@@ -71,16 +72,16 @@ report:
     - 99.9
 storage:
   local_storage:
-    path: reports_ai_studio
-    report_file_prefix: ai_studio_gemini_3.1_flash_lite_image_multimodal_
+    path: reports_geap
+    report_file_prefix: geap_gemini_3_pro_image_
   google_cloud_storage: null
   simple_storage_service: null
 server:
   type: vllm
-  model_name: gemini-3.1-flash-lite-image
-  base_url: http://127.0.0.1:8000/aistudio
+  model_name: google/gemini-3-pro-image
+  base_url: http://127.0.0.1:8000/geap
   ignore_eos: false
-  api_key: "$API_KEY"
+  api_key: null
   cert_path: null
   key_path: null
 tokenizer:
